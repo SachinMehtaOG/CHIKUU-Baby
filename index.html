@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+        <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -152,6 +152,17 @@
             margin-bottom: 15px;
         }
 
+        .babu-line {
+            font-weight: bold;
+            color: #ff2a55;
+            font-size: 1.2rem;
+            margin-top: 15px;
+            background: rgba(255, 77, 109, 0.1);
+            padding: 10px;
+            border-radius: 15px;
+            display: inline-block;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -164,6 +175,10 @@
     </style>
 </head>
 <body>
+
+    <audio id="bgSong" loop>
+        <source src="audio.mp3" type="audio/mpeg">
+    </audio>
 
     <div class="bg-hearts" id="heartsBg"></div>
 
@@ -186,6 +201,7 @@
         <div class="success-message" id="successSection">
             <h2>Yayyy! ❤️✨</h2>
             <p>I knew it! Ab jaldi se Snapchat par aao, aage ki baatein wahan karte hain! 😉 🥂</p>
+            <span class="babu-line">Chocolate aur jhumke lega babu? 🥺❤️ 🌸</span>
         </div>
     </div>
 
@@ -193,7 +209,6 @@
         let noClickCount = 0;
         let yesButtonScale = 1;
 
-        // No dhabane par emotional aur funny force lagane wala system
         const responses = [
             "Vapis soch lo... 🥺",
             "Ek baar aur soch lo, galat baat hai ye! 💔",
@@ -203,47 +218,48 @@
             "Ab to Yes hi dabana padega boss! 😉"
         ];
 
+        // Song play karne ka function
+        function playMusic() {
+            const audio = document.getElementById('bgSong');
+            audio.play().catch(err => console.log("Audio play deferred"));
+        }
+
         function handleNoClick() {
+            playMusic(); // Pehle click par music chalu ho jayega
             noClickCount++;
             const warningMessage = document.getElementById('warningMessage');
             const yesBtn = document.getElementById('yesBtn');
             const noBtn = document.getElementById('noBtn');
 
-            // 1. Text change karein loop ke aadhar par
             if (noClickCount <= responses.length) {
                 warningMessage.innerText = responses[noClickCount - 1];
             } else {
                 warningMessage.innerText = "Ab bas bhi karo, Yes daba do! 😤❤️";
             }
 
-            // 2. Yes button ko bada karte jao har click par
             yesButtonScale += 0.25;
             yesBtn.style.transform = `scale(${yesButtonScale})`;
             
-            // 3. Agar bohot zyada baar No dabaya, to "No" button ko dhire se hide/chota kar do
             if (noClickCount >= 4) {
                 noBtn.style.transform = "scale(0.8)";
                 noBtn.style.opacity = "0.6";
             }
             if (noClickCount >= 6) {
-                // Aakhiri stage par No button ko bhi Yes me force badal denge
                 noBtn.innerText = "Okay Yes! 😂";
                 noBtn.setAttribute("onclick", "celebrate()");
             }
         }
 
-        // Yes par click karne ke baad ka celebration effect
         function celebrate() {
+            playMusic(); // Agar usne seedhe Yes dabaya, toh bhi music chalu
             document.getElementById('questionSection').style.display = 'none';
             document.getElementById('successSection').style.display = 'block';
             
             document.body.style.background = "linear-gradient(135deg, #ff9999, #ff3355)";
             
-            // Speed up heart generation on success!
             setInterval(createHeart, 150);
         }
 
-        // Background me Hearts create karne ka function
         function createHeart() {
             const heartsBg = document.getElementById('heartsBg');
             const heart = document.createElement('div');
